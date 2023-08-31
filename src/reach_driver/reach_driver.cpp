@@ -13,16 +13,16 @@ using namespace nmea;
 ReachDriver::ReachDriver(ros::NodeHandle node,
                          ros::NodeHandle private_nh)
 {
+    bool parser_debug;
+    private_nh.param<bool>("parser_debug", parser_debug, false);
+    parser.log = parser_debug;
+    ROS_INFO_STREAM("[REACH] NMEA Parser debug: " << (parser_debug ? "on" : "off"));
+
     setSentencePubs(private_nh, node);
 
     twist_pub = node.advertise<geometry_msgs::Twist>("reach/vel", 100);
     fix_pub = node.advertise<sensor_msgs::NavSatFix>("reach/fix", 100);
     timeref_pub = node.advertise<sensor_msgs::TimeReference>("reach/time_ref", 100);
-
-    bool parser_debug;
-    private_nh.param<bool>("parser_debug", parser_debug, false);
-    parser.log = parser_debug;
-    ROS_INFO_STREAM("[REACH] NMEA Parser debug: " << (parser_debug ? "on" : "off"));
 }
 
 ReachDriver::~ReachDriver()
