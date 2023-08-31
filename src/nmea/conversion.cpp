@@ -65,9 +65,8 @@ namespace nmea
 		return d;
 	}
 
-	double latLongToDeg(std::string llstr, std::string dir)
+	double latLonToDeg(double pd, std::string dir)
 	{
-		double pd = parseDouble(llstr);
 		double deg = trunc(pd / 100); // get ddd from dddmm.mmmm
 		double mins = pd - deg * 100;
 
@@ -102,4 +101,24 @@ namespace nmea
 		return hour * 3600 + min * 60 + sec;
 	}
 
+	double toUnixTimestamp(uint16_t year, uint8_t month, uint8_t day, double utcSec)
+	{
+		// http://en.wikipedia.org/wiki/Julian_day
+		int32_t a = (14 - month) / 12;
+		int32_t y = year + 4800 - a;
+		int32_t m = month + 12 * a - 3;
+		int32_t jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045;
+		double utc_day = jdn - 2440587.5;
+		return utc_day * 86400.0 + utcSec;
+	}
+
+	double toUnixTimestamp(std::string raw_date, double utcSec)
+	{
+		double date = parseDouble(raw_date);
+		uint16_t year = (uint16_t)trunc(date / 10000.0);
+		uint8_t month = (uint8_t)trunc((date - year * 10000) / 100.0);
+		uint8_t day = (uint8_t)trunc(date - month * 100 - year * 10000);
+
+		return toUnixTimestamp(year, month, day, utcSec);
+	}
 }

@@ -36,9 +36,11 @@ namespace nmea
 
 	int64_t parseInt(std::string s, int radix = 10);
 
-	double latLongToDeg(std::string llstr, std::string dir);
+	double latLonToDeg(double pd, std::string dir);
 
 	double knotsToKilometersPerHour(double knots);
 
 	double toUtcSeconds(std::string raw_ts);
+	double toUnixTimestamp(uint16_t year, uint8_t month, uint8_t day, double utcSec);
+	double toUnixTimestamp(std::string raw_date, double utcSec);
 }
