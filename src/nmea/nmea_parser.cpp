@@ -12,8 +12,8 @@
 #include <algorithm>
 #include <cctype>
 
-#include <nmea/nmea_parser.h>
-#include <nmea/conversion.h>
+#include "nmea/nmea_parser.h"
+#include "nmea/conversion.h"
 
 using namespace std;
 using namespace nmea;

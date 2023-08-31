@@ -7,11 +7,12 @@
  *  See the license file included with this source.
  */
 
-#include <nmea/conversion.h>
 #include <cstdlib>
 #include <cmath>
 #include <iostream>
 #include <sstream>
+
+#include "nmea/conversion.h"
 
 namespace nmea
 {

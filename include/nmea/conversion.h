@@ -13,7 +13,6 @@
 #include <string>
 #include <exception>
 
-
 namespace nmea
 {
 	class ConversionError : public std::exception
