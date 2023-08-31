@@ -578,14 +578,15 @@ void NMEAParser::parseParameters(nmea_msgs::Gpgst &gpgst, NMEASentence &nmea)
 void NMEAParser::parseParameters(nmea_msgs::Gpvtg &gpvtg, NMEASentence &nmea)
 {
 	// float64 tmg_a
-	// string tmg_a_ref
-	// float64 tmg_b
-	// string tmg_b_ref
-	// float32 speed_a
-	// string speed_a_unit
-	// float32 speed_b
-	// string speed_b_unit
-	// string mode
+	// float64 track_t
+	// string track_t_ref
+	// float64 track_m
+	// string track_m_ref
+	// float32 speed_n
+	// string speed_n_unit
+	// float32 speed_k
+	// string speed_k_unit
+	// string mode_indicator
 	try
 	{
 		if (nmea.parameters.empty())
@@ -596,15 +597,15 @@ void NMEAParser::parseParameters(nmea_msgs::Gpvtg &gpvtg, NMEASentence &nmea)
 		{
 			throw ConversionError("Expected 9 parameters, got " + to_string(nmea.parameters.size()) + ".");
 		}
-		gpvtg.tmg_a = parseDouble(nmea.parameters[0]);
-		gpvtg.tmg_a_ref = nmea.parameters[1];
-		gpvtg.tmg_b = parseDouble(nmea.parameters[2]);
-		gpvtg.tmg_b_ref = nmea.parameters[3];
-		gpvtg.speed_a = parseFloat(nmea.parameters[4]);
-		gpvtg.speed_a_unit = nmea.parameters[5];
-		gpvtg.speed_b = parseFloat(nmea.parameters[6]);
-		gpvtg.speed_b_unit = nmea.parameters[7];
-		gpvtg.mode = nmea.parameters[8];
+		gpvtg.track_t = parseDouble(nmea.parameters[0]);
+		gpvtg.track_t_ref = nmea.parameters[1];
+		gpvtg.track_m = parseDouble(nmea.parameters[2]);
+		gpvtg.track_m_ref = nmea.parameters[3];
+		gpvtg.speed_n = parseFloat(nmea.parameters[4]);
+		gpvtg.speed_n_unit = nmea.parameters[5];
+		gpvtg.speed_k = parseFloat(nmea.parameters[6]);
+		gpvtg.speed_k_unit = nmea.parameters[7];
+		gpvtg.mode_indicator = nmea.parameters[8];
 	}
 	catch (ConversionError &e)
 	{
