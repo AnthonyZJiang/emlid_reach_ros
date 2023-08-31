@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>emlid_reach_ros</name>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <description>
 	Package to parse NMEA strings from TCP input and publish a very simple GPS message.
   Does not require the GPSD deamon to be installed.
@@ -9,7 +9,7 @@
   </description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag --> 
-  <maintainer email="pgneva@udel.edu">Patrick Geneva</maintainer>
+  <maintainer email="anthony.zyjiang@outlook.com">Zhengyi Jiang</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <license>BSD</license>
