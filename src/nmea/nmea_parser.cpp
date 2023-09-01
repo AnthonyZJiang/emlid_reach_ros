@@ -637,7 +637,7 @@ void NMEAParser::parseParameters(nmea_msgs::Gpzda &gpzda, NMEASentence &nmea)
 		{
 			throw ConversionError("Expected 6 parameters, got " + to_string(nmea.parameters.size()) + ".");
 		}
-		gpzda.utc_seconds = (uint32_t)parseInt(nmea.parameters[0]);
+		gpzda.utc_seconds = parseDouble(nmea.parameters[0]);
 		gpzda.day = (uint8_t)parseInt(nmea.parameters[1]);
 		gpzda.month = (uint8_t)parseInt(nmea.parameters[2]);
 		gpzda.year = (uint16_t)parseInt(nmea.parameters[3]);
