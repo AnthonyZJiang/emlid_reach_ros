@@ -74,7 +74,7 @@ namespace reach_driver
 
         void disconnect();
 
-        void reconnect(int interval=1);
+        void reconnect();
 
         bool ok();
 

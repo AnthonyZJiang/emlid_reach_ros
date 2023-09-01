@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
     ros::param::param<std::string>("comm_type", commType, "serial");
     ros::param::param<float>("polling_rate", polling_rate, 1);
 
+    bool notPolling = true;
+
     if (commType == "serial")
     {
         ReachSerialDriver serial_driver(node, private_nh);
@@ -36,6 +38,12 @@ int main(int argc, char* argv[])
             if (!polled)
             {
                 ROS_WARN_THROTTLE(1.0, "[REACH] Failed to poll device. Waiting for data...");
+                notPolling = true;
+            }
+            else if (notPolling)
+            {
+                ROS_INFO_STREAM("[REACH] Polling successful. Reach is now streaming data.");
+                notPolling = false;
             }
             ros::Duration(1.0/polling_rate).sleep();
             ros::spinOnce();

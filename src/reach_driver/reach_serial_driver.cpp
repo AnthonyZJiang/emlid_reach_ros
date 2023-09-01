@@ -13,10 +13,6 @@ ReachSerialDriver::ReachSerialDriver(ros::NodeHandle node, ros::NodeHandle priva
     ROS_INFO_STREAM("[REACH] Connecting to Reach...");
     ROS_INFO_STREAM("[REACH] Port: " << port << " | Baudrate: " << baudrate << " | Timeout: " << timeout);
     initialise();
-    if (ok())
-    {
-        ROS_INFO_STREAM("[REACH] Reach connected.");
-    }
 }
 
 ReachSerialDriver::~ReachSerialDriver()
@@ -41,22 +37,28 @@ void ReachSerialDriver::initialise()
         ROS_WARN_STREAM("[REACH] Port \"" << port << "\" is already open.");
         return;
     }
-    try
+    while (ros::ok() && !ser.isOpen())
     {
-        ser.open();
-    }
-    catch (serial::SerialException &e)
-    {
-        ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Is the port in use already?");
-        return;
-    }
-    catch (serial::IOException &e)
-    {
-        ROS_WARN_STREAM("[REACH] Waiting for port \"" << port << "\" to appear. Reconnecting...");
-        reconnect();
-    }
-    
+        try
+        {
+            ser.open();
+        }
+        catch (serial::SerialException &e)
+        {
+            ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Error: \n" << e.what());
+            ros::Duration(1.0).sleep();
+        }
+        catch (serial::IOException &e)
+        {
+            ROS_WARN_STREAM("[REACH] Waiting for port \"" << port << "\" to appear. Reconnecting...");
+            ros::Duration(1.0).sleep();
+        }
+    }    
     initialised = ser.isOpen();
+    if (ok())
+    {
+        ROS_INFO_STREAM("[REACH] Reach connected!");
+    }
 }
 
 void ReachSerialDriver::disconnect()
@@ -65,12 +67,9 @@ void ReachSerialDriver::disconnect()
     initialised = false;
 }
 
-void ReachSerialDriver::reconnect(int interval)
+void ReachSerialDriver::reconnect()
 {
     disconnect();
-    if (interval > 0) {
-        ros::Duration(interval).sleep();
-    }
     initialise();
 }
 
@@ -82,22 +81,30 @@ string ReachSerialDriver::readFromDevice()
     catch (serial::PortNotOpenedException &e)
     {
         ROS_ERROR_STREAM("[REACH] Port \"" << port << "\" not open. Reconnecting...");
-        reconnect(0);
+        reconnect();
     }
     catch (serial::SerialException &e)
     {
-        ROS_ERROR_STREAM("[REACH] Serial Exception. Error: \"" << e.what() << "\". Reconnecting...");
+        ROS_ERROR_STREAM("[REACH] Serial Exception. Error: \n" << e.what() << ".\nReconnecting...");
         reconnect();
     }
     catch (serial::IOException &e)
     {
-        ROS_ERROR_STREAM("[REACH] Unable to read from port. Error: \"" << e.what() << "\". Reconnecting...");
+        ROS_ERROR_STREAM("[REACH] Unable to read from port. Error: \n" << e.what() << ".\nReconnecting...");
         reconnect();
-        
     }
 }
 
 bool ReachSerialDriver::available()
 {
-    return ser.available();
+    try
+    {
+        return ser.available();
+    }
+    catch(serial::IOException &e)
+    {
+        ROS_ERROR_STREAM("[REACH] Unable to read from port. Error: \n" << e.what() << ".\nReconnecting...");
+        reconnect();
+    }
+    
 }
