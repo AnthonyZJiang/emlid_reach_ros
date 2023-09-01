@@ -37,3 +37,8 @@ catkin_make
 ```
 roslaunch emlid_reach_ros reach_ros.launch port:=<your_device_name>
 ```
+
+**Note** you may need to add read and write permission to the device:
+```
+sudo chmod +666 <your_device_name>
+```
