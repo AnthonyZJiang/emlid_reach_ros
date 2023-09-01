@@ -180,6 +180,8 @@ bool ReachDriver::poll()
         satNav.setTwist(twist);
         satNav.setNavSatFix(fix);
         satNav.setTimeReference(timeref);
+        fix.header.stamp = now;
+        timeref.header.stamp = now;
 
         twist_pub.publish(twist);
         fix_pub.publish(fix);
