@@ -434,7 +434,7 @@ void NMEAParser::parseParameters(nmea_msgs::Gpgga &gpgga, NMEASentence &nmea)
 		gpgga.altitude_units = nmea.parameters[9];
 		gpgga.undulation = parseFloat(nmea.parameters[10]);
 		gpgga.undulation_units = nmea.parameters[11];
-		gpgga.diff_age = parseDouble("0.0");
+		gpgga.diff_age = (uint32_t)round(parseDouble(nmea.parameters[11]));
 		gpgga.station_id = nmea.parameters[13];
 	}
 	catch (ConversionError &e)
@@ -621,7 +621,7 @@ void NMEAParser::parseParameters(nmea_msgs::Gpvtg &gpvtg, NMEASentence &nmea)
 
 void NMEAParser::parseParameters(nmea_msgs::Gpzda &gpzda, NMEASentence &nmea)
 {
-	// float64 utc_seconds
+	// uint32 utc_seconds
 	// uint8 day
 	// uint8 month
 	// uint16 year
@@ -637,7 +637,7 @@ void NMEAParser::parseParameters(nmea_msgs::Gpzda &gpzda, NMEASentence &nmea)
 		{
 			throw ConversionError("Expected 6 parameters, got " + to_string(nmea.parameters.size()) + ".");
 		}
-		gpzda.utc_seconds = parseDouble(nmea.parameters[0]);
+		gpzda.utc_seconds = (uint32_t)parseInt(nmea.parameters[0]);
 		gpzda.day = (uint8_t)parseInt(nmea.parameters[1]);
 		gpzda.month = (uint8_t)parseInt(nmea.parameters[2]);
 		gpzda.year = (uint16_t)parseInt(nmea.parameters[3]);
