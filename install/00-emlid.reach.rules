@@ -1,0 +1,1 @@
+ACTION=="add",KERNEL=="ttyACM[0-9]*",SUBSYSTEMS=="usb",ATTRS{idProduct}=="0013",ATTRS{idVendor}=="3032",MODE="666",SYMLINK+="reach_m2"
