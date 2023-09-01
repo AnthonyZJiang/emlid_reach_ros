@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
             bool polled = serial_driver.poll();
             if (!polled)
             {
-                ROS_WARN_THROTTLE(1.0, "[REACH] Failed to poll device. Maybe the polling rate is too high?");
+                ROS_WARN_THROTTLE(1.0, "[REACH] Failed to poll device. Waiting for data...");
             }
             ros::Duration(1.0/polling_rate).sleep();
             ros::spinOnce();

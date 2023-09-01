@@ -47,12 +47,13 @@ void ReachSerialDriver::initialise()
     }
     catch (serial::SerialException &e)
     {
-        ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Reconnecting...");
-        reconnect(5000);
+        ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Is the port in use already?");
+        return;
     }
     catch (serial::IOException &e)
     {
-        ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Have you specify the correct name? \nError:" << e.what());
+        ROS_WARN_STREAM("[REACH] Waiting for port \"" << port << "\" to appear. Reconnecting...");
+        reconnect();
     }
     
     initialised = ser.isOpen();
