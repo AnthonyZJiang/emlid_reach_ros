@@ -5,8 +5,17 @@ ROS package supporting [EMLID](https://emlid.com/) Reach series GPS devices.
 
 # Dependancies
 - ROS melodic
+- serial
 
 # Install
+
+### Dependancy
+```
+sudo apt update
+sudo apt install ros-melodic-serial
+```
+
+### Build from source
 ```
 mkdir -p catkin_ws/src
 cd catkin_ws/src

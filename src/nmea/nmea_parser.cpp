@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <cctype>
 
+#include <ros/console.h>
+
 #include "nmea/nmea_parser.h"
 #include "nmea/conversion.h"
 
@@ -139,10 +141,7 @@ void NMEAParser::logWarning(string txt)
 }
 void NMEAParser::logError(string txt)
 {
-	if (log)
-	{
-		cout << "[ERROR] " << txt << endl;
-	}
+	ROS_ERROR_STREAM("[REACH]::NMEA " << txt);
 }
 
 std::vector<NMEASentence> NMEAParser::getSentencesFromRawText(std::string text)
@@ -424,8 +423,8 @@ void NMEAParser::parseParameters(nmea_msgs::Gpgga &gpgga, NMEASentence &nmea)
 		}
 		gpgga.utc_seconds = toUtcSeconds(nmea.parameters[0]);
 		gpgga.lat = parseDouble(nmea.parameters[1]);
-		gpgga.lon = parseDouble(nmea.parameters[3]);
 		gpgga.lat_dir = nmea.parameters[2];
+		gpgga.lon = parseDouble(nmea.parameters[3]);
 		gpgga.lon_dir = nmea.parameters[4];
 		gpgga.gps_qual = (uint32_t)parseInt(nmea.parameters[5]);
 		gpgga.num_sats = (uint32_t)parseInt(nmea.parameters[6]);
@@ -434,7 +433,7 @@ void NMEAParser::parseParameters(nmea_msgs::Gpgga &gpgga, NMEASentence &nmea)
 		gpgga.altitude_units = nmea.parameters[9];
 		gpgga.undulation = parseFloat(nmea.parameters[10]);
 		gpgga.undulation_units = nmea.parameters[11];
-		gpgga.diff_age = (uint32_t)round(parseDouble(nmea.parameters[11]));
+		gpgga.diff_age = (uint32_t)round(parseDouble(nmea.parameters[12]));
 		gpgga.station_id = nmea.parameters[13];
 	}
 	catch (ConversionError &e)
