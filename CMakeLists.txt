@@ -39,6 +39,8 @@ add_library(${PROJECT_NAME}
     src/reach_driver/reach_serial_driver.cpp
     src/sat_nav.cpp
 )
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+
 
 add_executable(reach_node src/reach_node.cpp)
 target_link_libraries(reach_node ${PROJECT_NAME} ${catkin_LIBRARIES})
