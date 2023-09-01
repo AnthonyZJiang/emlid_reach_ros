@@ -30,12 +30,16 @@ SatNav::~SatNav()
  *  covariance  : need both GPGGA.hdop and GPGST to compute.
  *
  * TimeReference:
- *  time_ref    : GPZDA is preferred over GPRMC. Other sentences do not provide date hence not considered.
- *
+ *  time_ref    : GPZDA's utc_seconds does not include ms, hence utc_seconds from others is preferred.
  */
 
 void SatNav::addData(nmea_msgs::Gpgga &gga)
 {
+    if (!isUtcSecondsSet)
+    {
+        utcSeconds = gga.utc_seconds;
+        isUtcSecondsSet = true;
+    }
     if (!isLatLonAltSet)
     {
         latitude = nmea::latLonToDeg(gga.lat, gga.lat_dir);
@@ -52,6 +56,11 @@ void SatNav::addData(nmea_msgs::Gpgga &gga)
 
 void SatNav::addData(nmea_msgs::Gpgst &gst)
 {
+    if (!isUtcSecondsSet)
+    {
+        utcSeconds = gst.utc_seconds;
+        isUtcSecondsSet = true;
+    }
     latDev = gst.lat_dev;
     lonDev = gst.lon_dev;
     altDev = gst.alt_dev;
@@ -60,6 +69,11 @@ void SatNav::addData(nmea_msgs::Gpgst &gst)
 
 void SatNav::addData(nmea_msgs::Gprmc &rmc)
 {
+    if (!isUtcSecondsSet)
+    {
+        utcSeconds = rmc.utc_seconds;
+        isUtcSecondsSet = true;
+    }
     if (!isLatLonAltSet)
     {
         latitude = nmea::latLonToDeg(rmc.lat, rmc.lat_dir);
@@ -73,11 +87,6 @@ void SatNav::addData(nmea_msgs::Gprmc &rmc)
         isSpeedTrackSet = true;
     }
     date = rmc.date;
-    if (!isUtcSecondsSet)
-    {
-        utcSeconds = rmc.utc_seconds;
-        isUtcSecondsSet = true;
-    }
     if (!isGpsQualSet)
     {
         gpsQual = rmc.position_status == "A" ? 1 : 0;
@@ -87,13 +96,13 @@ void SatNav::addData(nmea_msgs::Gprmc &rmc)
 
 void SatNav::addData(nmea_msgs::Gpzda &zda)
 {
-    // overriding utcSeconds
-    utcSeconds = zda.utc_seconds;
+    if (!isUtcSecondsSet)
+    {
+        utcSeconds = zda.utc_seconds;
+    }
     day = zda.day;
     month = zda.month;
     year = zda.year;
-
-    isUtcSecondsSet = true;
 }
 
 void SatNav::addData(nmea_msgs::Gpvtg &vtg)
