@@ -4,7 +4,7 @@
         <arg name="baudrate" default="115200" />
         <arg name="timeout" default="1000" />
         <arg name="polling_rate" default="1" />
-        <arg name="sentences" default="GGA,GST,GZD,VTG" />
+        <arg name="sentences" default="GGA,GST,ZDA,VTG" />
         <arg name="pub_ignored" default="true" />
         <arg name="parser_debug" default="false" />
 

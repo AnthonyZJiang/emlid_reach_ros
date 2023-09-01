@@ -10,7 +10,8 @@ ReachSerialDriver::ReachSerialDriver(ros::NodeHandle node, ros::NodeHandle priva
     private_nh.param<std::string>("port", port, "/dev/ttyACM0");
     private_nh.param<int>("baudrate", baudrate, 115200);
     private_nh.param<int>("timeout", timeout, 1000);
-    ROS_INFO_STREAM("[REACH] Connecting to Reach via port: " << port << ", baudrate: " << baudrate << ", with timeout: " << timeout);
+    ROS_INFO_STREAM("[REACH] Connecting to Reach...");
+    ROS_INFO_STREAM("[REACH] Port: " << port << " | Baudrate: " << baudrate << " | Timeout: " << timeout);
     initialise();
     if (ok())
     {
@@ -48,6 +49,10 @@ void ReachSerialDriver::initialise()
     {
         ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Reconnecting...");
         reconnect(5000);
+    }
+    catch (serial::IOException &e)
+    {
+        ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Have you specify the correct name? \nError:" << e.what());
     }
     
     initialised = ser.isOpen();

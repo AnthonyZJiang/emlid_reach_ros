@@ -82,10 +82,11 @@ void ReachDriver::setSentencePubs(ros::NodeHandle private_nh, ros::NodeHandle no
             ss << s << ",";
         } else
         {
-            ROS_WARN_STREAM("Unknown sentence type \"" << s.substr(s.size()-1) << "\". Ignoring.");
+            ROS_WARN_STREAM("Unknown sentence type \"" << s << "\". Ignoring.");
         }
     }
-    ROS_INFO_STREAM("Sentences to publish: " << (ss.str().empty() ? "none" : ss.str()));
+    std::string sss = ss.str();
+    ROS_INFO_STREAM("[REACH] Sentences to publish: " << (sss.empty() ? "none" : sss.substr(0, sss.size()-1)));
 }
 
 bool ReachDriver::available() {}
