@@ -12,15 +12,13 @@
 #include "nmea/nmea_sentence.h"
 #include "reach_driver/reach_driver.h"
 
-
 using namespace reach_driver;
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "reach_node");
     ros::NodeHandle node;
     ros::NodeHandle private_nh("~");
-
 
     std::string commType;
     float polling_rate;
@@ -45,7 +43,7 @@ int main(int argc, char* argv[])
                 ROS_INFO_STREAM("[REACH] Polling successful. Reach is now streaming data.");
                 notPolling = false;
             }
-            ros::Duration(1.0/polling_rate).sleep();
+            ros::Duration(1.0 / polling_rate).sleep();
             ros::spinOnce();
         }
     }

@@ -1,19 +1,15 @@
 <?xml version="1.0"?>
 <package>
   <name>emlid_reach_ros</name>
-  <version>0.1.0</version>
+  <version>1.0.0</version>
   <description>
-	Package to parse NMEA strings from TCP input and publish a very simple GPS message.
-  Does not require the GPSD deamon to be installed.
-  Converted to work with the Reach RTK GPS units.
+    ROS package supporting EMLID Reach series GPS devices.
+    Parses NMEA strings from EMLID Reach devices and publishes topics including NMEA messages,
+    NavSatFix, TimeReference and Twist.
   </description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag --> 
-  <maintainer email="anthony.zyjiang@outlook.com">Zhengyi Jiang</maintainer>
-
-  <!-- One license tag required, multiple allowed, one license per tag -->
+  <maintainer email="anthony.jiang.github@outlook.com">Zhengyi Jiang</maintainer>
   <license>BSD</license>
-
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>roscpp</build_depend>
@@ -28,9 +24,7 @@
   <run_depend>sensor_msgs</run_depend>
   <run_depend>nmea_msgs</run_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
-  <!-- This is a pure Python package, so mark it architecture independent -->
-  <export><architecture_independent/></export>
-
-  
+  <export>
+    <architecture_independent />
+  </export>
 </package>

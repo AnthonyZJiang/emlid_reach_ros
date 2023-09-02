@@ -8,7 +8,6 @@
 #include <sensor_msgs/NavSatStatus.h>
 #include <sensor_msgs/TimeReference.h>
 
-
 #include <nmea_msgs/Sentence.h>
 #include <nmea_msgs/Gpgga.h>
 #include <nmea_msgs/Gpgsa.h>
@@ -61,9 +60,9 @@ namespace reach_driver
         bool publish_gprmc = false;
         bool publish_gpvtg = false;
         bool publish_gpzda = false;
-    };  
+    };
 
-    class ReachSerialDriver: public ReachDriver
+    class ReachSerialDriver : public ReachDriver
     {
 
     public:
@@ -79,7 +78,6 @@ namespace reach_driver
         bool ok();
 
         bool available();
-
 
     private:
         string readFromDevice();

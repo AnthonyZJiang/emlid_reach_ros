@@ -26,7 +26,6 @@
 
 #include <nmea/nmea_sentence.h>
 
-
 namespace nmea
 {
 	class NMEAParser;

@@ -1,6 +1,5 @@
 #include <sstream>
 #include <cmath>
-
 #include <ros/console.h>
 
 #include "reach_driver/reach_driver.h"
@@ -50,43 +49,50 @@ void ReachDriver::setSentencePubs(ros::NodeHandle private_nh, ros::NodeHandle no
             publish_gpgga = true;
             gpgga_pub = node.advertise<nmea_msgs::Gpgga>("reach/nmea/gpgga", 100);
             ss << s << ",";
-        } else if (s == "GSA")
+        }
+        else if (s == "GSA")
         {
             publish_gpgsa = true;
             gpgsa_pub = node.advertise<nmea_msgs::Gpgsa>("reach/nmea/gpgsa", 100);
             ss << s << ",";
-        } else if (s == "GST")
+        }
+        else if (s == "GST")
         {
             publish_gpgst = true;
             gpgst_pub = node.advertise<nmea_msgs::Gpgst>("reach/nmea/gpgst", 100);
             ss << s << ",";
-        } else if (s == "GSV")
+        }
+        else if (s == "GSV")
         {
             publish_gpgsv = true;
             gpgsv_pub = node.advertise<nmea_msgs::Gpgsv>("reach/nmea/gpgsv", 100);
             ss << s << ",";
-        } else if (s == "RMC")
+        }
+        else if (s == "RMC")
         {
             publish_gprmc = true;
             gprmc_pub = node.advertise<nmea_msgs::Gprmc>("reach/nmea/gprmc", 100);
             ss << s << ",";
-        } else if (s == "VTG")
+        }
+        else if (s == "VTG")
         {
             publish_gpvtg = true;
             gpvtg_pub = node.advertise<nmea_msgs::Gpvtg>("reach/nmea/gpvtg", 100);
             ss << s << ",";
-        } else if (s == "ZDA")
+        }
+        else if (s == "ZDA")
         {
             publish_gpzda = true;
             gpzda_pub = node.advertise<nmea_msgs::Gpzda>("reach/nmea/gpzda", 100);
             ss << s << ",";
-        } else
+        }
+        else
         {
             ROS_WARN_STREAM("Unknown sentence type \"" << s << "\". Ignoring.");
         }
     }
     std::string sss = ss.str();
-    ROS_INFO_STREAM("[REACH] Sentences to publish: " << (sss.empty() ? "none" : sss.substr(0, sss.size()-1)));
+    ROS_INFO_STREAM("[REACH] Sentences to publish: " << (sss.empty() ? "none" : sss.substr(0, sss.size() - 1)));
 }
 
 bool ReachDriver::available() {}
@@ -186,7 +192,7 @@ bool ReachDriver::poll()
         twist_pub.publish(twist);
         fix_pub.publish(fix);
         timeref_pub.publish(timeref);
-        
+
         return true;
     }
     return false;

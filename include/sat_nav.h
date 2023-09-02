@@ -19,35 +19,35 @@ namespace sat_nav
 {
     class SatNav
     {
-        private:
-        float speed=0;
-        double track=0;
-        bool isSpeedTrackSet=false;
+    private:
+        float speed = 0;
+        double track = 0;
+        bool isSpeedTrackSet = false;
 
-        double latitude=0;
-        double longitude=0;
-        float altitude=0;
-        bool isLatLonAltSet=false;
+        double latitude = 0;
+        double longitude = 0;
+        float altitude = 0;
+        bool isLatLonAltSet = false;
 
-        float hdop=0;
-        bool isHdopSet=false;
+        float hdop = 0;
+        bool isHdopSet = false;
 
-        float latDev=0;
-        float lonDev=0;
-        float altDev=0;
-        bool isDevSet=false;
+        float latDev = 0;
+        float lonDev = 0;
+        float altDev = 0;
+        bool isDevSet = false;
 
-        uint32_t gpsQual=0;
-        bool isGpsQualSet=false;
-        
-        std::string date="";
-        double utcSeconds=0;
-        bool isUtcSecondsSet=false;
-        uint16_t year=0;
-        uint8_t month=0;
-        uint8_t day=0;
+        uint32_t gpsQual = 0;
+        bool isGpsQualSet = false;
 
-        public:
+        std::string date = "";
+        double utcSeconds = 0;
+        bool isUtcSecondsSet = false;
+        uint16_t year = 0;
+        uint8_t month = 0;
+        uint8_t day = 0;
+
+    public:
         SatNav();
         ~SatNav();
 

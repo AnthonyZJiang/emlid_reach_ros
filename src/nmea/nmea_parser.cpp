@@ -11,7 +11,6 @@
 #include <iostream>
 #include <algorithm>
 #include <cctype>
-
 #include <ros/console.h>
 
 #include "nmea/nmea_parser.h"

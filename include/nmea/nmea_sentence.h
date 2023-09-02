@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-
 namespace nmea
 {
     class NMEASentence
