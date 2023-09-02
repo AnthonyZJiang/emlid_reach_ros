@@ -4,7 +4,7 @@ ROS package supporting [EMLID](https://emlid.com/) Reach series GPS devices.
 *Disclaimer: This is not an official ROS package and the author of this ROS package is not affiliated with EMLID.*
 
 # Dependancies
-- ROS melodic
+- ROS 1
 - serial
 
 # Install
@@ -12,7 +12,7 @@ ROS package supporting [EMLID](https://emlid.com/) Reach series GPS devices.
 ### Dependancy
 ```
 sudo apt update
-sudo apt install ros-melodic-serial
+sudo apt install ros-${ROS_DISTRO}-serial
 ```
 
 ### Build from source
