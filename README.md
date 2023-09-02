@@ -41,87 +41,73 @@ roslaunch emlid_reach_ros reach_ros.launch port:=<your_device_name>
 sudo chmod +666 <your_device_name>
 ```
 
-# Nodes
-## reach_node
+# reach_node
 ### Published Topics
 
-#### reach/nmea/gpgga (nmea_msgs/Gpgga.h)
+```
+reach/nmea/gpgga (nmea_msgs/Gpgga.h)
+    Translated from NMEA GGA sentences which contains position fix data.
 
-Translated from NMEA GGA sentences which contains position fix data.
+reach/nmea/gpgsa (nmea_msgs/Gpgsa.h)
+    Translated from NMEA GSA sentences which contains DOP and active satellite data.
 
-#### reach/nmea/gpgsa (nmea_msgs/Gpgsa.h)
+reach/nmea/gpgst (nmea_msgs/Gpgst.h)
+    Translated from NMEA GST sentences which contains GPS Pseudorange Noise Statistics.
 
-Translated from NMEA GSA sentences which contains DOP and active satellite data.
+reach/nmea/gpgsv (nmea_msgs/Gpgsv.h)
+    Translated from NMEA GSV sentences which contains satellite data.
 
-#### reach/nmea/gpgst (nmea_msgs/Gpgst.h)
+reach/nmea/gprmc (nmea_msgs/Gprmc.h)
+    Translated from NMEA RMC sentences which contains recommended minimum specific GPS/Transit data.
 
-Translated from NMEA GST sentences which contains GPS Pseudorange Noise Statistics.
+reach/nmea/gpvtg (nmea_msgs/Gpvtg.h)
+    Translated from NMEA VTG sentences which contains track made good and ground speed.
 
-#### reach/nmea/gpgsv (nmea_msgs/Gpgsv.h)
+reach/nmea/gpzda (nmea_msgs/Gpzda.h)
+    Translated from NMEA ZDA sentences which contains date and time.
 
-Translated from NMEA GSV sentences which contains satellite data.
+reach/nmea/ignored_sentences (nmea_msgs/Sentence.h)
+    Raw NMEA sentences that are not parsed by the driver.
 
-#### reach/nmea/gprmc (nmea_msgs/Gprmc.h)
+reach/fix (sensor_msgs/NavSatFix)
+    GPS postion fix in Lat/Lon/Alt. Requires GGA or RMC sentences to be parsed.
+        Note that altitude is only reported by GGA.
+    GPS fix quality is also reported in this topic.
+        RMC only reports fix or no fix
+        GGA also reports RTK fixes. 
+    Covariance is calculated if GPGST sentences are also parsed.
 
-Translated from NMEA RMC sentences which contains recommended minimum specific GPS/Transit data.
+reach/vel (geometry_msgs/TwistStamped)
+    Linear velocity calculated from GPS data. Requires RMC or VTG sentences to be parsed.
 
-#### reach/nmea/gpvtg (nmea_msgs/Gpvtg.h)
-
-Translated from NMEA VTG sentences which contains track made good and ground speed.
-
-#### reach/nmea/gpzda (nmea_msgs/Gpzda.h)
-
-Translated from NMEA ZDA sentences which contains date and time.
-
-#### reach/nmea/ignored_sentences (nmea_msgs/Sentence.h)
-
-Raw NMEA sentences that are not parsed by the driver.
-
-##### reach/fix (sensor_msgs/NavSatFix)
-
-GPS postion fix in Lat/Lon/Alt. Requires GGA or RMC sentences to be parsed. Note that altitude is only reported by GGA.
-
-GPS fix quality is also reported in this topic. RMC only reports fix or no fix, and GGA also reports RTK fixes. 
-
-Covariance is calculated if GPGST sentences are also parsed.
-
-#### reach/vel (geometry_msgs/TwistStamped)
-
-Linear velocity calculated from GPS data. Requires RMC or VTG sentences to be parsed.
-
-#### reach/time_ref (sensor_msgs/TimeReference)
-
-The timestamp from the GPS device. Requires ZDA or RMC sentences to be parsed.
+reach/time_ref (sensor_msgs/TimeReference)
+    The timestamp from the GPS device. Requires ZDA or RMC sentences to be parsed.
+```
 
 ### Parameters
-#### comm_type (string, default: serial)
+```
+comm_type (string, default: serial)
+    The communication type. Currently only serial is supported. TCP/IP support is planned.
 
-The communication type. Currently only serial is supported. TCP/IP support is planned.
+port (string, default: /dev/ttyACM0)
+     The device patha.
 
-#### port (string, default: /dev/ttyACM0)
+baudrate (int, default: 115200)
+    The baud rate to receive NMEA data.
 
-The device patha.
+timeout (int, default: 1000)
+    The timeout in milliseconds to wait for NMEA data.
 
-#### baudrate (int, default: 115200)
+polling_rate (int, default: 1)
+    The polling rate in Hz. This value should be equal or less than the device's output rate.
 
-The baud rate to receive NMEA data.
+sentences (string, default: GGA,GST,ZDA,VTG)
+    The NMEA sentences to be parsed. The driver will only parse the sentences specified here.
+    The sentences should be separated by comma.
 
-#### timeout (int, default: 1000)
+pub_ignored (bool, default: true)
+    Toggles publishing of raw NMEA sentences that are not parsed by the driver.
 
-The timeout in milliseconds to wait for NMEA data.
-
-#### polling_rate (int, default: 1)
-    
-The polling rate in Hz. This value should be equal or less than the device's output rate.
-
-#### sentences (string, default: GGA,GST,ZDA,VTG)
-
-The NMEA sentences to be parsed. The driver will only parse the sentences specified here. The sentences should be separated by comma.
-
-#### pub_ignored (bool, default: true)
-
-Toggles publishing of raw NMEA sentences that are not parsed by the driver.
-
-#### parser_debug (bool, default: false)
-
-Toggles debug output from the NMEA parser.
+parser_debug (bool, default: false)
+    Toggles debug output from the NMEA parser.
+```
