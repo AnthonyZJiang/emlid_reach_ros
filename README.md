@@ -1,6 +1,8 @@
 # emlid_reach_ros
 ROS package supporting [EMLID](https://emlid.com/) Reach series GPS devices.
 
+It interfaces with EMLID Reach devices, parses received NMEA sentences and publishes topics including NMEA messages, NavSatFix, TimeReference and Twist.
+
 *Disclaimer: This is not an official ROS package and the author of this ROS package is not affiliated with EMLID.*
 
 # Dependancies
@@ -42,3 +44,6 @@ roslaunch emlid_reach_ros reach_ros.launch port:=<your_device_name>
 ```
 sudo chmod +666 <your_device_name>
 ```
+
+# Limitations
+- Only works with USB serial. I have plans to add TCP support
