@@ -47,6 +47,7 @@ ReachDriver::ReachDriver(ros::NodeHandle node,
     private_nh.param<bool>("parser_debug", parser_debug, false);
     parser.log = parser_debug;
     ROS_INFO_STREAM("[REACH] NMEA Parser debug: " << (parser_debug ? "on" : "off"));
+    private_nh.param<string>("frame_id", frame_id, "gps");
 
     setSentencePubs(private_nh, node);
 
@@ -65,7 +66,7 @@ void ReachDriver::setSentencePubs(ros::NodeHandle private_nh, ros::NodeHandle no
     private_nh.param<bool>("pub_ignored", publish_ignored, true);
     if (publish_ignored)
     {
-        sentence_pub = node.advertise<nmea_msgs::Sentence>("nmea/ignored_sentence", 100);
+        sentence_pub = node.advertise<nmea_msgs::Sentence>("reach/nmea/ignored_sentence", 100);
     }
 
     std::string sentences;
@@ -154,6 +155,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpgga gpgga;
                 gpgga.header.stamp = now;
+                gpgga.header.frame_id = frame_id;
                 parser.parseParameters(gpgga, sentences[i]);
                 gpgga_pub.publish(gpgga);
 
@@ -163,6 +165,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpgsa gpgsa;
                 gpgsa.header.stamp = now;
+                gpgsa.header.frame_id = frame_id;
                 parser.parseParameters(gpgsa, sentences[i]);
                 gpgsa_pub.publish(gpgsa);
             }
@@ -170,6 +173,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpgst gpgst;
                 gpgst.header.stamp = now;
+                gpgst.header.frame_id = frame_id;
                 parser.parseParameters(gpgst, sentences[i]);
                 gpgst_pub.publish(gpgst);
                 satNav.addData(gpgst);
@@ -178,6 +182,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpgsv gpgsv;
                 gpgsv.header.stamp = now;
+                gpgsv.header.frame_id = frame_id;
                 parser.parseParameters(gpgsv, sentences[i]);
                 gpgsv_pub.publish(gpgsv);
             }
@@ -185,6 +190,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gprmc gprmc;
                 gprmc.header.stamp = now;
+                gprmc.header.frame_id = frame_id;
                 parser.parseParameters(gprmc, sentences[i]);
                 gprmc_pub.publish(gprmc);
                 satNav.addData(gprmc);
@@ -193,6 +199,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpvtg gpvtg;
                 gpvtg.header.stamp = now;
+                gpvtg.header.frame_id = frame_id;
                 parser.parseParameters(gpvtg, sentences[i]);
                 gpvtg_pub.publish(gpvtg);
                 satNav.addData(gpvtg);
@@ -201,6 +208,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Gpzda gpzda;
                 gpzda.header.stamp = now;
+                gpzda.header.frame_id = frame_id;
                 parser.parseParameters(gpzda, sentences[i]);
                 gpzda_pub.publish(gpzda);
                 satNav.addData(gpzda);
@@ -209,6 +217,7 @@ bool ReachDriver::poll()
             {
                 nmea_msgs::Sentence sentence;
                 sentence.header.stamp = now;
+                sentence.header.frame_id = frame_id;
                 parser.parseParameters(sentence, sentences[i]);
                 sentence_pub.publish(sentence);
             }
@@ -218,7 +227,9 @@ bool ReachDriver::poll()
         satNav.setNavSatFix(fix);
         satNav.setTimeReference(timeref);
         fix.header.stamp = now;
+        fix.header.frame_id = frame_id;
         timeref.header.stamp = now;
+        timeref.header.frame_id = frame_id;
 
         twist_pub.publish(twist);
         fix_pub.publish(fix);

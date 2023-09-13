@@ -70,6 +70,7 @@ namespace reach_driver
         virtual string readFromDevice();
 
         nmea::NMEAParser parser;
+        std::string frame_id;
 
         ros::Publisher sentence_pub;
         ros::Publisher gpgga_pub;
