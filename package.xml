@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>emlid_reach_ros</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>
     ROS package supporting EMLID Reach series GPS devices.
     Parses NMEA strings from EMLID Reach devices and publishes topics including NMEA messages,

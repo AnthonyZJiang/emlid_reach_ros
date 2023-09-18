@@ -44,6 +44,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <nmea_msgs/Gpzda.h>
 #include <nmea_msgs/Gpvtg.h>
 
+#define SET_STATE_NONE 0
+#define SET_STATE_NORMAL 1
+#define SET_STATE_OPTIMUM 2
+
 using namespace std;
 
 namespace sat_nav
@@ -53,31 +57,33 @@ namespace sat_nav
     private:
         float speed = 0;
         double track = 0;
-        bool isSpeedTrackSet = false;
+        uint8_t speedTrackSetState = SET_STATE_NONE;
 
         double latitude = 0;
         double longitude = 0;
         float altitude = 0;
-        bool isLatLonAltSet = false;
+        uint8_t latLonAltSetState = SET_STATE_NONE;
 
         float hdop = 0;
-        bool isHdopSet = false;
+        uint8_t hdopSetState = SET_STATE_NONE;
 
         float latDev = 0;
         float lonDev = 0;
         float altDev = 0;
-        bool isDevSet = false;
+        uint8_t devSetState = SET_STATE_NONE;
 
         uint32_t gpsQual = 0;
-        bool isGpsQualSet = false;
+        uint8_t gpsQualSetState = SET_STATE_NONE;
+
+        double utcSeconds = 0;
+        uint8_t utcSecondsSetState = SET_STATE_NONE;
 
         std::string date = "";
-        double utcSeconds = 0;
-        bool isUtcSecondsSet = false;
         uint16_t year = 0;
         uint8_t month = 0;
         uint8_t day = 0;
-
+        uint8_t dateSetState = SET_STATE_NONE;
+        
     public:
         SatNav();
         ~SatNav();
@@ -88,8 +94,8 @@ namespace sat_nav
         void addData(nmea_msgs::Gpzda &zda);
         void addData(nmea_msgs::Gpvtg &vtg);
 
-        void setTwist(geometry_msgs::Twist &twist);
-        void setNavSatFix(sensor_msgs::NavSatFix &fix);
-        void setTimeReference(sensor_msgs::TimeReference &tref);
+        bool setTwist(geometry_msgs::Twist &twist);
+        bool setNavSatFix(sensor_msgs::NavSatFix &fix);
+        bool setTimeReference(sensor_msgs::TimeReference &tref);
     };
 }

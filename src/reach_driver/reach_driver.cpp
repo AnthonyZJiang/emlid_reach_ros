@@ -223,18 +223,23 @@ bool ReachDriver::poll()
             }
         }
 
-        satNav.setTwist(twist);
-        satNav.setNavSatFix(fix);
-        satNav.setTimeReference(timeref);
-        fix.header.stamp = now;
-        fix.header.frame_id = frame_id;
-        timeref.header.stamp = now;
-        timeref.header.frame_id = frame_id;
-
-        twist_pub.publish(twist);
-        fix_pub.publish(fix);
-        timeref_pub.publish(timeref);
-
+        if (satNav.setTwist(twist))
+        {
+            twist_pub.publish(twist);
+        }
+        if (satNav.setNavSatFix(fix))
+        {
+            fix.header.stamp = now;
+            fix.header.frame_id = frame_id;
+            fix_pub.publish(fix);
+        }
+        if (satNav.setTimeReference(timeref))
+        {
+            timeref.header.stamp = now;
+            timeref.header.frame_id = frame_id;
+            timeref_pub.publish(timeref);
+        }
+        
         return true;
     }
     return false;

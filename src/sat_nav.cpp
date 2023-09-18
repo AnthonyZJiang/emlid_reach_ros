@@ -44,92 +44,94 @@ SatNav::~SatNav()
 }
 
 /*
- * GPGGA - lat, lon, alt, gps_qual, hdop
+ * GPGGA - lat, lon, alt, gps_qual, hdop, utc_seconds
  * GPRMC - lat, lon, speed, track, date, utc_seconds, position_status
- * GPGST - lat_dev, lon_dev, alt_dev
+ * GPGST - lat_dev, lon_dev, alt_dev, utc_seconds
  * GPZDA - utc_seconds, day, month, year
  * GPVTG - speed_k, track_t
  *
  * Twist
- *  linear      : data from both GPVTG and GPRMC can be used.
+ *  linear      : available from GPVTG or GPRMC.
  *
  * NavSatFix:
- *  status      : GPGGA.gps_qual provides better info then GPRMC.position_status.
- *  latitude    : GPGGA and GPRMC are both OK.
- *  longitude   : GPGGA and GPRMC are both OK.
- *  altitude    : only provided by GPGGA.alt.
- *  covariance  : need both GPGGA.hdop and GPGST to compute.
+ *  status      : available from GPGGA.gps_qual or GPRMC.position_status. GGA provides more details.
+ *  latitude    : available from GPGGA.lat or GPRMC.lat.
+ *  longitude   : available from GPGGA.lon or GPRMC.lon.
+ *  altitude    : only available from GPGGA.alt.
+ *  covariance  : need both GPGGA.hdop and GPGST.xxx_dev to compute.
  *
  * TimeReference:
- *  time_ref    : GPZDA's utc_seconds does not include ms, hence utc_seconds from others is preferred.
+ *  time_ref    : utc_seconds available from GPGGA, GPRMC, GPGST and GPZDA. GPZDA does not provide ms.
  */
 
 void SatNav::addData(nmea_msgs::Gpgga &gga)
 {
-    if (!isUtcSecondsSet)
+    if (utcSecondsSetState != SET_STATE_OPTIMUM)
     {
         utcSeconds = gga.utc_seconds;
-        isUtcSecondsSet = true;
+        utcSecondsSetState = SET_STATE_OPTIMUM;
     }
-    if (!isLatLonAltSet)
+    if (latLonAltSetState != SET_STATE_OPTIMUM)
     {
         latitude = nmea::latLonToDeg(gga.lat, gga.lat_dir);
         longitude = nmea::latLonToDeg(gga.lon, gga.lon_dir);
-        isLatLonAltSet = true;
+        latLonAltSetState = SET_STATE_OPTIMUM;
     }
     altitude = gga.alt;
+
     gpsQual = gga.gps_qual;
-    isGpsQualSet = true;
+    gpsQualSetState = SET_STATE_OPTIMUM;
 
     hdop = gga.hdop;
-    isHdopSet = true;
+    hdopSetState = SET_STATE_OPTIMUM;
 }
 
 void SatNav::addData(nmea_msgs::Gpgst &gst)
 {
-    if (!isUtcSecondsSet)
+    if (utcSecondsSetState != SET_STATE_OPTIMUM)
     {
         utcSeconds = gst.utc_seconds;
-        isUtcSecondsSet = true;
+        utcSecondsSetState = SET_STATE_OPTIMUM;
     }
     latDev = gst.lat_dev;
     lonDev = gst.lon_dev;
     altDev = gst.alt_dev;
-    isDevSet = true;
+    devSetState = SET_STATE_OPTIMUM;
 }
 
 void SatNav::addData(nmea_msgs::Gprmc &rmc)
 {
-    if (!isUtcSecondsSet)
+    if (utcSecondsSetState != SET_STATE_OPTIMUM)
     {
         utcSeconds = rmc.utc_seconds;
-        isUtcSecondsSet = true;
+        utcSecondsSetState = SET_STATE_OPTIMUM;
     }
-    if (!isLatLonAltSet)
+    if (latLonAltSetState != SET_STATE_OPTIMUM)
     {
         latitude = nmea::latLonToDeg(rmc.lat, rmc.lat_dir);
         longitude = nmea::latLonToDeg(rmc.lon, rmc.lon_dir);
-        isLatLonAltSet = true;
+        latLonAltSetState = SET_STATE_OPTIMUM;
     }
-    if (!isSpeedTrackSet)
+    if (speedTrackSetState != SET_STATE_OPTIMUM)
     {
         speed = nmea::knotsToKilometersPerHour(rmc.speed);
         track = rmc.track;
-        isSpeedTrackSet = true;
+        speedTrackSetState = SET_STATE_OPTIMUM;
     }
-    date = rmc.date;
-    if (!isGpsQualSet)
+    if (gpsQualSetState == SET_STATE_NONE)
     {
         gpsQual = rmc.position_status == "A" ? 1 : 0;
-        isGpsQualSet = true;
+        gpsQualSetState = SET_STATE_NORMAL;
     }
+    date = rmc.date;
 }
 
 void SatNav::addData(nmea_msgs::Gpzda &zda)
 {
-    if (!isUtcSecondsSet)
+    if (utcSecondsSetState == SET_STATE_NONE)
     {
         utcSeconds = zda.utc_seconds;
+        utcSecondsSetState = SET_STATE_NORMAL;
     }
     day = zda.day;
     month = zda.month;
@@ -138,27 +140,36 @@ void SatNav::addData(nmea_msgs::Gpzda &zda)
 
 void SatNav::addData(nmea_msgs::Gpvtg &vtg)
 {
-    if (isSpeedTrackSet)
+    if (speedTrackSetState != SET_STATE_OPTIMUM)
     {
-        return;
+        speed = vtg.speed_k;
+        track = vtg.track_t;
+        speedTrackSetState = SET_STATE_OPTIMUM;
     }
-    speed = vtg.speed_k;
-    track = vtg.track_t;
-    isSpeedTrackSet = true;
 }
 
-void SatNav::setTwist(geometry_msgs::Twist &twist)
+bool SatNav::setTwist(geometry_msgs::Twist &twist)
 {
+    if (speedTrackSetState == SET_STATE_NONE)
+    {
+        return false;
+    }
+
     twist.linear.x = speed * sin(track);
     twist.linear.y = speed * cos(track);
     twist.linear.z = 0;
     twist.angular.x = 0;
     twist.angular.y = 0;
     twist.angular.z = 0;
+    return true;
 }
 
-void SatNav::setNavSatFix(sensor_msgs::NavSatFix &fix)
+bool SatNav::setNavSatFix(sensor_msgs::NavSatFix &fix)
 {
+    if (latLonAltSetState == SET_STATE_NONE)
+    {
+        return false;
+    }
     sensor_msgs::NavSatStatus status;
     switch (gpsQual)
     {
@@ -183,20 +194,21 @@ void SatNav::setNavSatFix(sensor_msgs::NavSatFix &fix)
     fix.longitude = longitude;
     fix.altitude = altitude;
 
-    if (isDevSet && isHdopSet)
+    if (devSetState == SET_STATE_NONE || hdopSetState == SET_STATE_NONE)
+    {
+        fix.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
+    }
+    else
     {
         fix.position_covariance[0] = pow(hdop * latDev, 2);
         fix.position_covariance[4] = pow(hdop * lonDev, 2);
         fix.position_covariance[8] = pow(hdop * altDev, 2);
         fix.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_APPROXIMATED;
     }
-    else
-    {
-        fix.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_UNKNOWN;
-    }
+    return true;
 }
 
-void SatNav::setTimeReference(sensor_msgs::TimeReference &tref)
+bool SatNav::setTimeReference(sensor_msgs::TimeReference &tref)
 {
     if (year > 0)
     {
@@ -210,7 +222,8 @@ void SatNav::setTimeReference(sensor_msgs::TimeReference &tref)
     }
     else
     {
-        return;
+        return false;
     }
     tref.source = "gps";
+    return true;
 }
