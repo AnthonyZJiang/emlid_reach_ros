@@ -53,9 +53,12 @@ int main(int argc, char *argv[])
 
     std::string commType;
     float polling_rate;
-    ros::param::param<std::string>("comm_type", commType, "serial");
-    ros::param::param<float>("polling_rate", polling_rate, 1);
+    private_nh.param<std::string>("comm_type", commType, "serial");
+    private_nh.param<float>("polling_rate", polling_rate, 1.0);
+    ROS_INFO_STREAM("[REACH] Communication type: " << commType);
+    ROS_INFO_STREAM("[REACH] Polling rate: " << polling_rate);
 
+    double sleep_time = 1.0 / polling_rate;
     bool notPolling = true;
 
     if (commType == "serial")
@@ -74,7 +77,7 @@ int main(int argc, char *argv[])
                 ROS_INFO_STREAM("[REACH] Polling successful. Reach is now streaming data.");
                 notPolling = false;
             }
-            ros::Duration(1.0 / polling_rate).sleep();
+            ros::Duration(sleep_time).sleep();
             ros::spinOnce();
         }
     }

@@ -1,13 +1,15 @@
 <?xml version="1.0"?>
 <package>
   <name>emlid_reach_ros</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>
     ROS package supporting EMLID Reach series GPS devices.
     Parses NMEA strings from EMLID Reach devices and publishes topics including NMEA messages,
     NavSatFix, TimeReference and Twist.
   </description>
+  <url>https://github.com/tmxkn1/emlid_reach_ros</url>
 
+  <author email="anthony.jiang.github@outlook.com">Zhengyi Jiang</author>
   <maintainer email="anthony.jiang.github@outlook.com">Zhengyi Jiang</maintainer>
   <license>BSD</license>
 
