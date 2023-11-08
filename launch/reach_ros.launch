@@ -18,6 +18,6 @@
 		<param name="sentences" value="$(arg sentences)" />
 		<param name="pub_ignored" value="$(arg pub_ignored)" />
 		<param name="parser_debug" value="$(arg parser_debug)" />
-		<param name="frame_id" default="$(arg frame_id)" />
+		<param name="frame_id" value="$(arg frame_id)" />
 	</node>
 </launch>
