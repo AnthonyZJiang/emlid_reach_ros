@@ -7,6 +7,7 @@
 	<arg name="sentences" default="GGA,GST,ZDA,VTG" />
 	<arg name="pub_ignored" default="true" />
 	<arg name="parser_debug" default="false" />
+	<arg name="frame_id" default="gps" />
 
 	<node pkg="emlid_reach_ros" type="reach_node" name="reach_node" output="screen">
 		<param name="comm_type" value="$(arg comm_type)" />
@@ -17,5 +18,6 @@
 		<param name="sentences" value="$(arg sentences)" />
 		<param name="pub_ignored" value="$(arg pub_ignored)" />
 		<param name="parser_debug" value="$(arg parser_debug)" />
+		<param name="frame_id" default="$(arg frame_id)" />
 	</node>
 </launch>
