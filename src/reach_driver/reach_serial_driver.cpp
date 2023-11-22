@@ -76,13 +76,25 @@ void ReachSerialDriver::initialise()
         }
         catch (serial::SerialException &e)
         {
-            ROS_ERROR_STREAM("[REACH] Unable to open port \"" << port << "\". Error: \n"
+            ROS_ERROR_STREAM("[REACH] Unable to open " << port << ". Error: \n"
                                                               << e.what());
             ros::Duration(1.0).sleep();
         }
         catch (serial::IOException &e)
         {
-            ROS_WARN_STREAM("[REACH] Waiting for port \"" << port << "\" to appear. Reconnecting...");
+            if (e.getErrorNumber() == 13)
+            {
+                ROS_WARN_STREAM("[REACH] Do not have read access for " << port << ".");
+            }
+            else if (e.getErrorNumber() == 2)
+            {
+                ROS_WARN_STREAM("[REACH] Waiting for port \"" << port << "\" to appear. Reconnecting...");
+            }
+            else 
+            {
+                ROS_WARN_STREAM("[REACH] Can't open " << port << ".\n" 
+                                                             << e.what());
+            }
             ros::Duration(1.0).sleep();
         }
     }
