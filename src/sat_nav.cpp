@@ -176,6 +176,7 @@ bool SatNav::setNavSatFix(sensor_msgs::NavSatFix &fix)
     case 1:
         status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
         break;
+    case 9:
     case 2:
         status.status = sensor_msgs::NavSatStatus::STATUS_SBAS_FIX;
         break;
